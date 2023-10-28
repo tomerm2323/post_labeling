@@ -66,15 +66,15 @@ def main():
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
     # st.image(image_data)
     st.title(f"Labeling Form\n")
-    st.markdown("How to label?\n first let's get to know our labels:"
-                "1. violet[Non relevant] - Data that is not the war related at all\n"
-                "2. green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war\n"
-                "3. red[Relevant and pro Hamas] - Data that shows Israel in a bad light or Hamas in a good light regarding the war\n"
-                "4. gray[Relevant and neutral] - Data that related to the war but takes not obvious side\n"
-                ""
-                "Please label each data item(image, text etc...) as it corresponding index in the explanation above.\n"
-                ""
-                "EXAMPLE: \n post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.")
+    st.markdown("""How to label?\n first let's get to know our labels:
+                1. violet[Non relevant] - Data that is not the war related at all\n
+                2. green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war\n
+                3. red[Relevant and pro Hamas] - Data that shows Israel in a bad light or Hamas in a good light regarding the war\n
+                4. gray[Relevant and neutral] - Data that related to the war but takes not obvious side\n
+                
+                Please label each data item(image, text etc...) as it corresponding index in the explanation above.\n
+                
+                EXAMPLE: \n post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.""")
     #
     # csv_file = r"src/PostsExample.csv"
     # data = pd.read_csv(csv_file, encoding="utf8")
