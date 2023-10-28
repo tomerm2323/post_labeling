@@ -85,7 +85,7 @@ def image_label_component(image_url,current_image,bucket_name):
 def video_label_component(video_url,current_video,bucket_name):
     s3 = get_client()
     video_data = s3.get_object(Bucket=bucket_name, Key=video_url)
-    video_file = open(video_data, 'rb')
+    video_file = open(video_data['Body'], 'rb')
     video_bytes = video_file.read()
     st.video(video_bytes)
     label = st.text_input(f"Enter label for video {current_video}:", key=f"label_video_{current_video}")
