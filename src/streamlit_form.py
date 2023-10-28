@@ -80,9 +80,7 @@ def video_label_component(path,current_video):
 def main():
 
     st.title(f"Labeling Form")
-
     st.markdown('''How to label? first let's get to know our labels:
-    
     1. :violet[Non relevant]: - Data that is not the war related at all.
     2. :green[Relevant and pro Israel]: - Data that shows Israel in a good light regarding the war.
     3. :red[Relevant and pro Hamas]: - Data that shows Israel in a bad light or Hamas in a good light regarding the war.
@@ -91,7 +89,11 @@ def main():
     Please label each data item(image, text etc...) as it corresponding index in the explanation above.
     
     **EXAMPLE**:
-    post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.''')
+    post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.
+    
+    
+    ''')
+
     label_dict = {"post" : {},"image": {}, "video": {}}
     posts_files = get_posts_files()
     for posts_file in posts_files:
