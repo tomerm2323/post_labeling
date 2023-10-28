@@ -90,9 +90,7 @@ def main():
     st.markdown("Please label each data item(image, text etc...) as it corresponding index in the explanation above.")
     st.write("**EXAMPLE**")
     st.write("post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.")
-    
-    
-    ''')
+
 
     label_dict = {"post" : {},"image": {}, "video": {}}
     posts_files = get_posts_files()
