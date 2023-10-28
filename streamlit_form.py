@@ -28,7 +28,7 @@ def main():
         # Save the labeled data to a new CSV file
         labeled_data = data.copy()
         labeled_data['Label'] = labels
-
+        st.title("Please review your labels and download")
         st.write("Labeled Data:")
         st.write(labeled_data)
 
