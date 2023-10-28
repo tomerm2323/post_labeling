@@ -87,7 +87,7 @@ def main():
     #
     #
     # Check if the number of labels provided matches the number of rows
-    if len(labels) != num_entries:
+    if len(labels) + len(images_urls) != num_entries :
         st.error("Please provide labels for all rows before submitting.")
     # if len(labels) != num_entries + len(os.listdir(image_data_path)) + len(os.listdir(video_data_path))  :
     #     st.error("Please provide labels for all rows before submitting.")
