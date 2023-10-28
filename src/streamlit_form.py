@@ -34,8 +34,10 @@ def get_images():
     images_urls = [obj['Key'] for obj in response.get('Contents', []) if
               obj['Key'].lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
     for image_url in images_urls:
-        st.image(f"https://{bucket_name}.s3.amazonaws.com/{image_url}", caption="Image from S3",
-                 use_column_width=True)
+        image = Image.open(image_url)
+        st.image(image)
+        # st.image(f"https://{bucket_name}.s3.amazonaws.com/{image_url}", caption="Image from S3",
+        #          use_column_width=True)
 def labeling_component(data, current_row):
     st.write(f"**Text:** {data.iloc[current_row, 0]}")
     label = st.text_input(f"Enter label (0 or 1) for row {current_row + 1}:", key=f"label_{current_row}")
