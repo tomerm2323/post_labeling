@@ -12,7 +12,7 @@ def labeling_component(data, current_row, labels):
 def main():
     st.title("Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
 
-    csv_file = r"C:\Users\Administrator\Desktop\DoccanoExample.csv"
+    csv_file = r"PostsExample.csv"
     data = pd.read_csv(csv_file, encoding="utf8")
     num_entries = len(data)
     labels = []
