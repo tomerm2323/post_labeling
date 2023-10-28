@@ -5,6 +5,7 @@ import pandas as pd
 from st_files_connection import FilesConnection
 import boto3
 import toml
+from io import BytesIO
 import s3fs
 # Function to create a custom labeling component
 def get_client():
@@ -34,8 +35,9 @@ def get_images():
     images_urls = [obj['Key'] for obj in response.get('Contents', []) if
               obj['Key'].lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
     for image_url in images_urls:
-        image = Image.open(f"https://{bucket_name}.s3.amazonaws.com/{image_url}")
-        st.image(image)
+        img_data = s3.get_object(Bucket=bucket_name, Key=image_url)
+        img = Image.open(BytesIO(img_data['Body'].read()))
+        st.image(img, caption="Image from S3", use_column_width=True)
         # st.image(f"https://{bucket_name}.s3.amazonaws.com/{image_url}", caption="Image from S3",
         #          use_column_width=True)
 def labeling_component(data, current_row):
