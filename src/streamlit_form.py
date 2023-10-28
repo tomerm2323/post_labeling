@@ -65,8 +65,8 @@ def main():
     text_data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
     # st.image(image_data)
-    st.title(f"Labeling Form\n")
-    st.markdown("""How to label?\n first let's get to know our labels:
+    st.title(f"Labeling Form")
+    st.markdown("""How to label? first let's get to know our labels:
                 1. violet[Non relevant] - Data that is not the war related at all\n
                 2. green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war\n
                 3. red[Relevant and pro Hamas] - Data that shows Israel in a bad light or Hamas in a good light regarding the war\n
