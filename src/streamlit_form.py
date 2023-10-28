@@ -82,15 +82,15 @@ def main():
     st.title(f"Labeling Form")
 
     st.markdown("""How to label? first let's get to know our labels:
-                1. violet[Non relevant] - Data that is not the war related at all\n
-                2. green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war\n
-                3. red[Relevant and pro Hamas] - Data that shows Israel in a bad light or Hamas in a good light regarding the war\n
-                4. gray[Relevant and neutral] - Data that related to the war but takes not obvious side\n
-                
-                Please label each data item(image, text etc...) as it corresponding index in the explanation above.\n
-                
-                EXAMPLE:
-                post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.""")
+    1. violet[Non relevant] - Data that is not the war related at all.
+    2. green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war.
+    3. red[Relevant and pro Hamas] - Data that shows Israel in a bad light or Hamas in a good light regarding the war.
+    4. gray[Relevant and neutral] - Data that related to the war but takes not obvious side.
+    
+    Please label each data item(image, text etc...) as it corresponding index in the explanation above.
+    
+    **EXAMPLE**:
+    post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.""")
     label_dict = {"post" : {},"image": {}, "video": {}}
     posts_files = get_posts_files()
     for posts_file in posts_files:
