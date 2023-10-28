@@ -28,7 +28,7 @@ def main():
     # Specify input format is a csv and to cache the result for 600 seconds.
     conn = st.connection('s3', type=FilesConnection)
     text_data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
-    image_data = conn.open("streamlit-posts-labeling/images")
+    image_data = conn.open("streamlit-posts-labeling/images/")
     st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise//////{image_data.__dict__}")
     #
     # csv_file = r"src/PostsExample.csv"
