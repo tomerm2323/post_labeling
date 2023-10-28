@@ -6,6 +6,7 @@ from st_files_connection import FilesConnection
 import boto3
 import toml
 from io import BytesIO
+from botocore.exceptions import NoCredentialsError
 import s3fs
 # Function to create a custom labeling component
 def get_client():
@@ -119,19 +120,33 @@ def main():
     # Save the labeled data to a new CSV file
 
     labeled_data = pd.DataFrame.from_dict(label_dict)
-    st.title("Please review your labels and download")
+    st.title("Please review your labels and submit")
     @st.experimental_memo
     def convert_df(df):
         return df.to_csv(index=False).encode('utf-8')
 
-    csv = convert_df(labeled_data)
-    st.download_button(
-        "Press to Download",
-        csv,
-        "labeled.csv",
-        "text/csv",
-        key='download-csv'
-    )
+    def upload_data_to_s3(data, bucket_name, s3_path):
+        s3 = boto3.client('s3')
+        try:
+            s3.put_object(Bucket=bucket_name, Key=s3_path, Body=data)
+            return True
+        except NoCredentialsError:
+            st.error("AWS credentials not available. Please configure AWS credentials.")
+            return False
+
+    st.title("Submit")
+
+    data_to_submit = convert_df(labeled_data)
+    # If the user clicks the "Submit" button
+    if st.button("Submit"):
+        s3_bucket_name = 'streamlit-posts-labeling'
+        s3_data_path = 'https://streamlit-posts-labeling.s3.amazonaws.com/images/labeled.csv'
+
+        if upload_data_to_s3(data_to_submit, s3_bucket_name, s3_data_path):
+            st.success(f"Data submitted and uploaded to S3: s3://{s3_bucket_name}/{s3_data_path}")
+        else:
+            st.error("Failed to upload the data to S3.")
+
     st.write("Labeled Data:")
     st.write(labeled_data)
 
