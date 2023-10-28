@@ -66,6 +66,7 @@ def main():
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
     # st.image(image_data)
     st.title(f"Labeling Form")
+
     st.markdown("""How to label? first let's get to know our labels:
                 1. violet[Non relevant] - Data that is not the war related at all\n
                 2. green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war\n
