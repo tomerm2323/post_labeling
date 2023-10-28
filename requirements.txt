@@ -1,3 +1,4 @@
 streamlit
 s3fs
 st-files-connection
+boto3

@@ -3,6 +3,8 @@ from PIL import Image
 import streamlit as st
 import pandas as pd
 from st_files_connection import FilesConnection
+import boto3
+import s3fs
 # Function to create a custom labeling component
 def labeling_component(data, current_row):
     st.write(f"**Text:** {data.iloc[current_row, 0]}")
@@ -29,7 +31,7 @@ def main():
     conn = st.connection('s3', type=FilesConnection)
     text_data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
-    st.image(image_data)
+    # st.image(image_data)
     st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
     #
     # csv_file = r"src/PostsExample.csv"
