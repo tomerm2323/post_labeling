@@ -5,7 +5,9 @@ import pandas as pd
 from st_files_connection import FilesConnection
 import boto3
 import toml
+import time
 from io import BytesIO
+
 from botocore.exceptions import NoCredentialsError
 import s3fs
 # Function to create a custom labeling component
@@ -103,7 +105,7 @@ def main():
     images_urls = get_images()
     for current_image, image_url in enumerate(images_urls):
         label = image_label_component(image_url,current_image,"streamlit-posts-labeling")
-        label_dict['image'][image_url] = label
+        label_dict['image'][f"image_{current_image}_{time.time()}"] = label
 
     # for current_video, path in enumerate(os.listdir(video_data_path)):
     #     label = video_label_component(video_data_path + "/" + path, current_video)
@@ -134,13 +136,13 @@ def main():
             st.error("AWS credentials not available. Please configure AWS credentials.")
             return False
 
-    st.title("Submit")
+    st.write("**Submit**")
 
     data_to_submit = convert_df(labeled_data)
     # If the user clicks the "Submit" button
     if st.button("Submit"):
         s3_bucket_name = 'streamlit-posts-labeling'
-        s3_data_path = 'https://streamlit-posts-labeling.s3.amazonaws.com/images/labeled.csv'
+        s3_data_path = 'https://streamlit-posts-labeling.s3.amazonaws.com/labeled/labeled.csv'
 
         if upload_data_to_s3(data_to_submit, s3_bucket_name, s3_data_path):
             st.success(f"Data submitted and uploaded to S3: s3://{s3_bucket_name}/{s3_data_path}")
