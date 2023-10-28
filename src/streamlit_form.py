@@ -29,6 +29,18 @@ def main():
         labeled_data = data.copy()
         labeled_data['Label'] = labels
         st.title("Please review your labels and download")
+        @st.experimental_memo
+        def convert_df(df):
+            return df.to_csv(index=False).encode('utf-8')
+
+        csv = convert_df(labeled_data)
+        st.download_button(
+            "Press to Download",
+            csv,
+            "labeled.csv",
+            "text/csv",
+            key='download-csv'
+        )
         st.write("Labeled Data:")
         st.write(labeled_data)
 
