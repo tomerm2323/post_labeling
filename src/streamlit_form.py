@@ -13,9 +13,9 @@ def connect_to_s3():
     with open("secrets.toml", "r") as toml_file:
         config = toml.load(toml_file)
 
-    aws_access_key = config["access_key"]
-    aws_secret_key = config["secret_key"]
-    aws_region = config["region"]
+    aws_access_key = config["aws"]["AWS_ACCESS_KEY_ID"]
+    aws_secret_key = config["aws"]["AWS_SECRET_ACCESS_KEY"]
+    aws_region = config["aws"]["AWS_DEFAULT_REGION"]
 
     # Create an S3 client using the credentials
     s3 = boto3.client(
