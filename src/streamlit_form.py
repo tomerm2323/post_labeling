@@ -34,7 +34,7 @@ def get_images():
     images_urls = [obj['Key'] for obj in response.get('Contents', []) if
               obj['Key'].lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
     for image_url in images_urls:
-        image = Image.open(image_url)
+        image = Image.open(bucket_name + "/" + folder_name + "/" + image_url)
         st.image(image)
         # st.image(f"https://{bucket_name}.s3.amazonaws.com/{image_url}", caption="Image from S3",
         #          use_column_width=True)
