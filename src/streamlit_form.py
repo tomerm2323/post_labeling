@@ -38,7 +38,7 @@ def get_images():
     return images_urls
 def get_posts_files():
     bucket_name = "streamlit-posts-labeling"
-    folder_name = 'images'
+    folder_name = 'text'
     s3 = get_client()
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
     csv_files = [obj['Key'] for obj in response.get('Contents', []) if
