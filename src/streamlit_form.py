@@ -34,22 +34,21 @@ def get_images():
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
     images_urls = [obj['Key'] for obj in response.get('Contents', []) if
               obj['Key'].lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
-    for image_url in images_urls:
-        img_data = s3.get_object(Bucket=bucket_name, Key=image_url)
-        img = Image.open(BytesIO(img_data['Body'].read()))
-        st.image(img, caption="Image from S3", use_column_width=True)
-        # st.image(f"https://{bucket_name}.s3.amazonaws.com/{image_url}", caption="Image from S3",
-        #          use_column_width=True)
+
+    return images_urls
+
 def labeling_component(data, current_row):
     st.write(f"**Text:** {data.iloc[current_row, 0]}")
     label = st.text_input(f"Enter label (0 or 1) for row {current_row + 1}:", key=f"label_{current_row}")
 
     return label
 
-def image_label_component(path,current_image):
-    image = Image.open(path)
-    st.image(image)
-    label = st.text_input(f"Enter label (0 or 1) for image {current_image}:", key=f"label_image_{current_image}")
+def image_label_component(image_url,current_image,bucket_name):
+    s3 = get_client()
+    img_data = s3.get_object(Bucket=bucket_name, Key=image_url)
+    img = Image.open(BytesIO(img_data['Body'].read()))
+    st.image(img, caption="Image from S3", use_column_width=True)
+    label = st.text_input(f"image {current_image}:", key=f"label_image_{current_image}")
     return label
 def video_label_component(path,current_video):
     video_file = open(path, 'rb')
@@ -67,7 +66,6 @@ def main():
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
     # st.image(image_data)
     st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise.....")
-    get_images()
     #
     # csv_file = r"src/PostsExample.csv"
     # data = pd.read_csv(csv_file, encoding="utf8")
@@ -78,10 +76,10 @@ def main():
     for current_row in range(num_entries):
         label = labeling_component(text_data, current_row)
         labels.append(label)
-    # for current_image, path in enumerate(os.listdir(image_data_path)):
-    #     label = image_label_component(image_data_path + "/" + path, current_image)
-    #     data.loc[len(data.index)] = f"image_{current_image}"
-    #     labels.append(label)
+    images_urls = get_images()
+    for current_image, image_url in enumerate(images_urls):
+        label = image_label_component(image_url,current_image,"streamlit-posts-labeling")
+        labels.append(label)
     # for current_video, path in enumerate(os.listdir(video_data_path)):
     #     label = video_label_component(video_data_path + "/" + path, current_video)
     #     data.loc[len(data.index)] = f"video_{current_video}"
