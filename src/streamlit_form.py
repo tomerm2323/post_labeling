@@ -29,7 +29,9 @@ def main():
     conn = st.connection('s3', type=FilesConnection)
     text_data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
-    st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise//////{image_data}")
+    image = Image.open("s3://streamlit-posts-labeling/images/pro israel image.jpg")
+    st.image(image)
+    st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
     #
     # csv_file = r"src/PostsExample.csv"
     # data = pd.read_csv(csv_file, encoding="utf8")
