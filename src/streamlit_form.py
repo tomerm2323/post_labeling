@@ -116,14 +116,17 @@ def main():
 
     st.markdown("Please label each data item(image, text etc...) as it corresponding index in the explanation above.")
     st.write("**EXAMPLE**")
-    st.write("post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.\n")
+    st.write("post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.\n"
+             ""
+             ""
+             "")
 
 
     label_dict = {"post" : {},"image": {}, "video": {}}
     bucket_name = "streamlit-posts-labeling"
 
 
-    st.write("**Text labeling**")
+    st.subheader("**Text labeling**")
     st.write("")
     posts_files = get_posts_files()
     for posts_file in posts_files:
@@ -131,7 +134,7 @@ def main():
             label = post_label_component(posts_file, current_row)
             label_dict["post"][posts_file.iloc[current_row, 0]] = label
 
-    st.write("**Image labeling**")
+    st.subheader("**Image labeling**")
     st.write("")
     images_urls = get_images()
     for current_image, image_url in enumerate(images_urls):
@@ -139,14 +142,14 @@ def main():
         label_dict['image'][f"image_{current_image}_{time.time()}"] = label
     videos_urls = get_videos()
 
-    st.write("**Video labeling**")
+    st.subheader("**Video labeling**")
     st.write("")
     for current_video, video_url in enumerate(videos_urls):
         label = video_label_component(video_url, current_video, bucket_name)
         label_dict['video'][f"video_{current_video}_{time.time()}"] = label
 
     labeled_data = pd.DataFrame.from_dict(label_dict)
-    st.title("Please review your labels and submit")
+    st.subheader("Please review your labels and submit")
 
     st.write("**Submit**")
 
