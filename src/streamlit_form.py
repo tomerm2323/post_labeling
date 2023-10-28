@@ -88,7 +88,7 @@ def main():
     st.markdown("4. :gray[Relevant and neutral] - Data that related to the war but takes not obvious side.")
 
     st.markdown("Please label each data item(image, text etc...) as it corresponding index in the explanation above.")
-    st.write("**EXAMPLE**:")
+    st.write("**EXAMPLE**")
     st.write("post - Israel killing children's will be labeled as 3 because it's against Israel and regarding the war.")
     
     
