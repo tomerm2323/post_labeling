@@ -27,18 +27,18 @@ def main():
     # Create connection object and retrieve file contents.
     # Specify input format is a csv and to cache the result for 600 seconds.
     conn = st.connection('s3', type=FilesConnection)
-    df = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
-    # st.title("Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
+    data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
+    st.title("Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
     #
     # csv_file = r"src/PostsExample.csv"
     # data = pd.read_csv(csv_file, encoding="utf8")
     # image_data_path = r"C:\Users\Administrator\Desktop\Tomer\personal images"
     # video_data_path = r"C:\Users\Administrator\Desktop\video"
-    # num_entries = len(data)
-    # labels = []
-    # for current_row in range(num_entries):
-    #     label = labeling_component(data, current_row)
-    #     labels.append(label)
+    num_entries = len(data)
+    labels = []
+    for current_row in range(num_entries):
+        label = labeling_component(data, current_row)
+        labels.append(label)
     # for current_image, path in enumerate(os.listdir(image_data_path)):
     #     label = image_label_component(image_data_path + "/" + path, current_image)
     #     data.loc[len(data.index)] = f"image_{current_image}"
@@ -49,28 +49,30 @@ def main():
     #     labels.append(label)
     #
     #
-    # # Check if the number of labels provided matches the number of rows
+    # Check if the number of labels provided matches the number of rows
+    if len(labels) != num_entries:
+        st.error("Please provide labels for all rows before submitting.")
     # if len(labels) != num_entries + len(os.listdir(image_data_path)) + len(os.listdir(video_data_path))  :
     #     st.error("Please provide labels for all rows before submitting.")
-    # else:
-    #     # Save the labeled data to a new CSV file
-    #     labeled_data = data.copy()
-    #     labeled_data['Label'] = labels
-    #     st.title("Please review your labels and download")
-    #     @st.experimental_memo
-    #     def convert_df(df):
-    #         return df.to_csv(index=False).encode('utf-8')
-    #
-    #     csv = convert_df(labeled_data)
-    #     st.download_button(
-    #         "Press to Download",
-    #         csv,
-    #         "labeled.csv",
-    #         "text/csv",
-    #         key='download-csv'
-    #     )
-    #     st.write("Labeled Data:")
-    #     st.write(labeled_data)
+    else:
+        # Save the labeled data to a new CSV file
+        labeled_data = data.copy()
+        labeled_data['Label'] = labels
+        st.title("Please review your labels and download")
+        @st.experimental_memo
+        def convert_df(df):
+            return df.to_csv(index=False).encode('utf-8')
+
+        csv = convert_df(labeled_data)
+        st.download_button(
+            "Press to Download",
+            csv,
+            "labeled.csv",
+            "text/csv",
+            key='download-csv'
+        )
+        st.write("Labeled Data:")
+        st.write(labeled_data)
 
 if __name__ == "__main__":
     main()
