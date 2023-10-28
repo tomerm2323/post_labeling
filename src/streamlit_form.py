@@ -27,17 +27,18 @@ def main():
     # Create connection object and retrieve file contents.
     # Specify input format is a csv and to cache the result for 600 seconds.
     conn = st.connection('s3', type=FilesConnection)
-    data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
-    st.title("Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
+    text_data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
+    image_data = list(iter(conn.open("streamlit-posts-labeling/images")))
+    st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise//////{image_data}")
     #
     # csv_file = r"src/PostsExample.csv"
     # data = pd.read_csv(csv_file, encoding="utf8")
     # image_data_path = r"C:\Users\Administrator\Desktop\Tomer\personal images"
     # video_data_path = r"C:\Users\Administrator\Desktop\video"
-    num_entries = len(data)
+    num_entries = len(text_data)
     labels = []
     for current_row in range(num_entries):
-        label = labeling_component(data, current_row)
+        label = labeling_component(text_data, current_row)
         labels.append(label)
     # for current_image, path in enumerate(os.listdir(image_data_path)):
     #     label = image_label_component(image_data_path + "/" + path, current_image)
@@ -56,7 +57,7 @@ def main():
     #     st.error("Please provide labels for all rows before submitting.")
     else:
         # Save the labeled data to a new CSV file
-        labeled_data = data.copy()
+        labeled_data = text_data.copy()
         labeled_data['Label'] = labels
         st.title("Please review your labels and download")
         @st.experimental_memo
