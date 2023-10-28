@@ -141,11 +141,11 @@ def main():
     data_to_submit = convert_df(labeled_data)
     # If the user clicks the "Submit" button
     if st.button("Submit"):
-        s3_bucket_name = 'streamlit-posts-labeling/labeled'
+        s3_bucket_name = 'streamlit-posts-labeling'
         s3_data_path = 'labeled.csv'
 
         if upload_data_to_s3(data_to_submit, s3_bucket_name, s3_data_path):
-            st.success(f"Data submitted and uploaded to S3: s3://{s3_bucket_name}/{s3_data_path}")
+            st.success(f"Data submitted and uploaded to S3: s3://{s3_bucket_name}/labeled/{s3_data_path}")
         else:
             st.error("Failed to upload the data to S3.")
 
