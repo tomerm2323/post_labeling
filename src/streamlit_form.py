@@ -7,7 +7,7 @@ import boto3
 import toml
 import s3fs
 # Function to create a custom labeling component
-def connect_to_s3():
+def get_client():
 
     # Load AWS credentials from the TOML file
     with open("secrets.toml", "r") as toml_file:
@@ -24,12 +24,18 @@ def connect_to_s3():
         aws_secret_access_key=aws_secret_key,
         region_name=aws_region
     )
+    return s3
 
-    # Now you can use the `s3` client to interact with your S3 bucket
-    # For example, you can list objects in a bucket:
+def get_images():
     bucket_name = "streamlit-posts-labeling"
-    response = s3.list_objects_v2(Bucket=bucket_name)
-    return [obj for obj in response.get("Contents", [])]
+    folder_name = 'images'
+    s3 = get_client()
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+    images_urls = [obj['Key'] for obj in response.get('Contents', []) if
+              obj['Key'].lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
+    for image_url in images_urls:
+        st.image(f"https://{bucket_name}.s3.amazonaws.com/{image_url}", caption="Image from S3",
+                 use_column_width=True)
 def labeling_component(data, current_row):
     st.write(f"**Text:** {data.iloc[current_row, 0]}")
     label = st.text_input(f"Enter label (0 or 1) for row {current_row + 1}:", key=f"label_{current_row}")
@@ -56,7 +62,8 @@ def main():
     text_data = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
     image_data = conn.open("streamlit-posts-labeling/images/pro israel image.jpg")
     # st.image(image_data)
-    st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise.....{connect_to_s3()}")
+    st.title(f"Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise.....")
+    get_images()
     #
     # csv_file = r"src/PostsExample.csv"
     # data = pd.read_csv(csv_file, encoding="utf8")
