@@ -27,7 +27,7 @@ def main():
     # Create connection object and retrieve file contents.
     # Specify input format is a csv and to cache the result for 600 seconds.
     conn = st.connection('streamlit-posts-labeling', type=FilesConnection)
-    df = conn.read("streamlit-posts-labeling/text/PostsExample.csv", input_format="csv", ttl=600)
+    df = conn.read("/text/PostsExample.csv", input_format="csv", ttl=600)
     # st.title("Text Labeling Form\n Please enter 1 for pro israel and 0 otherwise")
     #
     # csv_file = r"src/PostsExample.csv"
