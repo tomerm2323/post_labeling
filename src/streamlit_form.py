@@ -39,6 +39,15 @@ def get_images():
               obj['Key'].lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
 
     return images_urls
+def get_videos():
+    bucket_name = "streamlit-posts-labeling"
+    folder_name = 'videos'
+    s3 = get_client()
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+    videos_urls = [obj['Key'] for obj in response.get('Contents', []) if
+              obj['Key'].lower().endswith('mp4')]
+
+    return videos_urls
 def get_posts_files():
     bucket_name = "streamlit-posts-labeling"
     folder_name = 'text'
@@ -59,7 +68,7 @@ def load_csv_to_dataframe(bucket_name, csv_key):
     obj = s3.get_object(Bucket=bucket_name, Key=csv_key)
     dataframe = pd.read_csv(obj['Body'])
     return dataframe
-def labeling_component(data, current_row):
+def post_label_component(data, current_row):
 
     st.write(f"**Text:** {data.iloc[current_row, 0]}")
     label = st.text_input(f"Enter label for post {current_row + 1}:", key=f"label_{current_row}")
@@ -73,12 +82,26 @@ def image_label_component(image_url,current_image,bucket_name):
     st.image(img, caption="Image from S3", use_column_width=True)
     label = st.text_input(f"Enter label for image {current_image}:", key=f"label_image_{current_image}")
     return label
-def video_label_component(path,current_video):
-    video_file = open(path, 'rb')
+def video_label_component(video_url,current_video,bucket_name):
+    s3 = get_client()
+    video_data = s3.get_object(Bucket=bucket_name, Key=video_url)
+    video_file = open(video_data, 'rb')
     video_bytes = video_file.read()
     st.video(video_bytes)
     label = st.text_input(f"Enter label for video {current_video}:", key=f"label_video_{current_video}")
     return label
+@st.experimental_memo
+def convert_df(df):
+    return df.to_csv(index=False).encode('utf-8')
+
+def upload_data_to_s3(data, bucket_name, s3_path):
+    s3 = boto3.client('s3')
+    try:
+        s3.put_object(Bucket=bucket_name, Key=s3_path, Body=data)
+        return True
+    except NoCredentialsError:
+        st.error("AWS credentials not available. Please configure AWS credentials.")
+        return False
 # Main Streamlit app
 def main():
 
@@ -96,22 +119,23 @@ def main():
 
 
     label_dict = {"post" : {},"image": {}, "video": {}}
+    bucket_name = "streamlit-posts-labeling"
     posts_files = get_posts_files()
     for posts_file in posts_files:
         for current_row in range(len(posts_file)):
-            label = labeling_component(posts_file, current_row)
+            label = post_label_component(posts_file, current_row)
             label_dict["post"][posts_file.iloc[current_row, 0]] = label
 
     images_urls = get_images()
     for current_image, image_url in enumerate(images_urls):
-        label = image_label_component(image_url,current_image,"streamlit-posts-labeling")
+        label = image_label_component(image_url,current_image,bucket_name)
         label_dict['image'][f"image_{current_image}_{time.time()}"] = label
+    videos_urls = get_videos()
+    for current_video, video_url in enumerate(videos_urls):
+        label = video_label_component(video_url, current_video, bucket_name)
+        label_dict['video'][f"video_{current_video}_{time.time()}"] = label
 
-    # for current_video, path in enumerate(os.listdir(video_data_path)):
-    #     label = video_label_component(video_data_path + "/" + path, current_video)
-    #     data.loc[len(data.index)] = f"video_{current_video}"
-    #     labels.append(label)
-    #
+
     #
     # Check if the number of labels provided matches the number of rows
     # if len() != num_entries + num_images:
@@ -123,18 +147,6 @@ def main():
 
     labeled_data = pd.DataFrame.from_dict(label_dict)
     st.title("Please review your labels and submit")
-    @st.experimental_memo
-    def convert_df(df):
-        return df.to_csv(index=False).encode('utf-8')
-
-    def upload_data_to_s3(data, bucket_name, s3_path):
-        s3 = boto3.client('s3')
-        try:
-            s3.put_object(Bucket=bucket_name, Key=s3_path, Body=data)
-            return True
-        except NoCredentialsError:
-            st.error("AWS credentials not available. Please configure AWS credentials.")
-            return False
 
     st.write("**Submit**")
 
