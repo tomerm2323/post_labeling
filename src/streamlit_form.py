@@ -80,9 +80,7 @@ def video_label_component(path,current_video):
 def main():
 
     st.title(f"Labeling Form")
-    st.markdown('''
-        :red[Streamlit] :orange[can] :green[write] :blue[text] :violet[in]
-        :gray[pretty] :rainbow[colors].''')
+
     st.markdown('''How to label? first let's get to know our labels:
     1. :violet[Non relevant] - Data that is not the war related at all.
     2. :green[Relevant and pro Israel] - Data that shows Israel in a good light regarding the war.
