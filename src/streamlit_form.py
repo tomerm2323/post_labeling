@@ -106,7 +106,7 @@ def upload_data_to_s3(data, bucket_name, s3_path):
 # Main Streamlit app
 def main():
 
-    st.title(f"Labeling Form")
+    st.title(f"Labeling Form-V2")
 
     st.markdown("How to label? first let's get to know our labels")
     st.markdown("1. :violet[Non relevant] - Data that is not the war related at all.")
